@@ -9,7 +9,7 @@ import (
 
 func main() {
 	// Ruta del script existente
-	scriptPath := "./script_cron.sh"
+	scriptPath := "/home/jeremy-kvm/Proyecto/bash/crear_contenedores.sh"
 
 	// 1. Hacer el script ejecutable
 	hacerEjecutable(scriptPath)
