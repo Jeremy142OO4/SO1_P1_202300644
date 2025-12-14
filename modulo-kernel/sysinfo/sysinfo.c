@@ -79,7 +79,31 @@ static char *get_process_cmdline(struct task_struct *task)
     mmput(mm);
     return cmdline;
 }
+static void seq_print_json_string(struct seq_file *m, const char *s)
+{
+    const unsigned char *p = (const unsigned char *)s;
+    seq_putc(m, '"');
 
+    while (*p) {
+        switch (*p) {
+            case '\"': seq_puts(m, "\\\""); break;
+            case '\\': seq_puts(m, "\\\\"); break;
+            case '\b': seq_puts(m, "\\b");  break;
+            case '\f': seq_puts(m, "\\f");  break;
+            case '\n': seq_puts(m, "\\n");  break;
+            case '\r': seq_puts(m, "\\r");  break;
+            case '\t': seq_puts(m, "\\t");  break;
+            default:
+                if (*p < 0x20)
+                    seq_printf(m, "\\u%04x", *p);
+                else
+                    seq_putc(m, *p);
+        }
+        p++;
+    }
+
+    seq_putc(m, '"');
+}
 
 // Función para mostrar la información en formato JSON
 static int sysinfo_show(struct seq_file *m, void *v) {
@@ -145,11 +169,18 @@ static int sysinfo_show(struct seq_file *m, void *v) {
         // Imprimir información del proceso
         seq_printf(m, "    {\n");
         seq_printf(m, "      \"PID\": %d,\n", task->pid);
-        seq_printf(m, "      \"Name\": \"%s\",\n", task->comm);
-        seq_printf(m, "      \"Cmdline\": \"%s\",\n", cmdline ? cmdline : "N/A");
+        seq_puts(m, "      \"Name\": ");
+        seq_print_json_string(m, task->comm);
+        seq_puts(m, ",\n");
+
+        seq_puts(m, "      \"Cmdline\": ");
+        seq_print_json_string(m, cmdline ? cmdline : "N/A");
+        seq_puts(m, ",\n");
         seq_printf(m, "      \"vsz\": %lu,\n", vsz);
         seq_printf(m, "      \"rss\": %lu,\n", rss);
         seq_printf(m, "      \"Memory_Usage\": %lu.%lu,\n", mem_usage / 10, mem_usage % 10);
+        seq_printf(m, "      \"utime\": %lu,\n", utime);
+        seq_printf(m, "      \"stime\": %lu,\n", stime);
         seq_printf(m, "      \"CPU_Usage\": %lu.%02lu\n", cpu_usage / 100, cpu_usage % 100);
         seq_printf(m, "    }");
 

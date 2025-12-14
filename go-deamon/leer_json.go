@@ -6,16 +6,18 @@ import (
 	"fmt"
 	"os"
 	"sort"
+	"time"
 	"strings"
+	"strconv"
 )
 
 const procPath = "/proc/sysinfo_so1_202300644"
 
 type SysInfo struct {
-	Totalram  uint64    `json:"Totalram"`
-	Freeram   uint64    `json:"Freeram"`
-	Procs     int       `json:"Procs"`
-	Processes []Process `json:"Processes"`
+	Totalram   uint64    `json:"Totalram"`
+	Freeram    uint64    `json:"Freeram"`
+	Procs      int       `json:"Procs"`
+	Processes  []Process `json:"Processes"`
 }
 
 type Process struct {
@@ -24,8 +26,11 @@ type Process struct {
 	Cmdline     string  `json:"Cmdline"`
 	VSZ         uint64  `json:"vsz"`
 	RSS         uint64  `json:"rss"`
-	MemoryUsage float64 `json:"Memory_Usage"` // ej: 12.3
-	CPUUsage    float64 `json:"CPU_Usage"`    // ej: 1.25
+	MemoryUsage float64 `json:"Memory_Usage"`
+	CPUUsage    float64 `json:"CPU_Usage"` // si lo sigues usando
+	UTime       uint64  `json:"utime"`
+	STime       uint64  `json:"stime"`
+	CPUPercent float64 `json:"-"`
 }
 
 func main() {
@@ -35,7 +40,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	// /proc a veces trae cosas raras; limpiamos espacios nulos (por si acaso)
+
 	clean := strings.TrimSpace(string(raw))
 
 	var si SysInfo
@@ -61,10 +66,16 @@ func printSummary(si SysInfo) {
 	fmt.Printf("Total RAM (KB): %d\n", si.Totalram)
 	fmt.Printf("Free  RAM (KB): %d\n", si.Freeram)
 	fmt.Printf("Used  RAM (KB): %d\n", used)
+	cpuTotal, err := totalCPUPercent(500 * time.Millisecond)
+	if err != nil {
+		fmt.Printf("CPU Total (%%): N/A (%v)\n", err)
+	} else {
+		fmt.Printf("CPU Total (%%): %.2f\n", cpuTotal)
+	}
 	fmt.Printf("Procesos contados: %d (array=%d)\n", si.Procs, len(si.Processes))
 	fmt.Println()
 
-	// Top 5 por RSS (memoria)
+
 	topMem := make([]Process, 0, len(si.Processes))
 	topMem = append(topMem, si.Processes...)
 	sort.Slice(topMem, func(i, j int) bool {
@@ -79,7 +90,7 @@ func printSummary(si SysInfo) {
 	}
 	fmt.Println()
 
-	// Top 5 por CPU
+	
 	topCPU := make([]Process, 0, len(si.Processes))
 	topCPU = append(topCPU, si.Processes...)
 	sort.Slice(topCPU, func(i, j int) bool {
@@ -93,7 +104,7 @@ func printSummary(si SysInfo) {
 			i+1, p.PID, p.Name, p.CPUUsage, p.RSS, safeOneLine(p.Cmdline, 60))
 	}
 
-	// Validaciones simples
+	
 	if err := validate(si); err != nil {
 		fmt.Println()
 		fmt.Printf("WARNING: %v\n", err)
@@ -118,7 +129,7 @@ func snippet(s string, n int) string {
 }
 
 func safeOneLine(s string, max int) string {
-	// Quita saltos y tabs para que el print no se rompa
+	
 	s = strings.ReplaceAll(s, "\n", " ")
 	s = strings.ReplaceAll(s, "\r", " ")
 	s = strings.ReplaceAll(s, "\t", " ")
@@ -138,4 +149,69 @@ func min(a, b int) int {
 		return a
 	}
 	return b
+}
+
+func readCPUStat() (idle uint64, total uint64, err error) {
+	b, err := os.ReadFile("/proc/stat")
+	if err != nil {
+		return 0, 0, err
+	}
+	line := strings.SplitN(string(b), "\n", 2)[0] // primera línea: "cpu ..."
+	f := strings.Fields(line)
+	if len(f) < 8 || f[0] != "cpu" {
+		return 0, 0, fmt.Errorf("formato inválido en /proc/stat")
+	}
+
+	// cpu user nice system idle iowait irq softirq steal guest guest_nice...
+	var vals []uint64
+	for i := 1; i < len(f); i++ {
+		v, e := strconv.ParseUint(f[i], 10, 64)
+		if e != nil {
+			break
+		}
+		vals = append(vals, v)
+	}
+	if len(vals) < 5 {
+		return 0, 0, fmt.Errorf("no hay suficientes campos en /proc/stat")
+	}
+
+	idleAll := vals[3] // idle
+	if len(vals) > 4 {
+		idleAll += vals[4] // iowait
+	}
+
+	var tot uint64
+	for _, v := range vals {
+		tot += v
+	}
+
+	return idleAll, tot, nil
+}
+
+func totalCPUPercent(sample time.Duration) (float64, error) {
+	idle1, total1, err := readCPUStat()
+	if err != nil {
+		return 0, err
+	}
+	time.Sleep(sample)
+	idle2, total2, err := readCPUStat()
+	if err != nil {
+		return 0, err
+	}
+
+	if total2 <= total1 {
+		return 0, fmt.Errorf("delta total CPU inválido")
+	}
+
+	dTotal := float64(total2 - total1)
+	dIdle := float64(idle2 - idle1)
+
+	used := (dTotal - dIdle) / dTotal * 100.0
+	if used < 0 {
+		used = 0
+	}
+	if used > 100 {
+		used = 100
+	}
+	return used, nil
 }
