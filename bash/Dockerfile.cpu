@@ -1,0 +1,26 @@
+FROM grafana/grafana-oss:latest
+
+USER root
+RUN apk add --no-cache bash stress-ng
+
+# Wrapper: inicia stress de CPU en background y luego arranca Grafana normal
+RUN cat > /usr/local/bin/entrypoint-with-cpu-stress.sh <<'EOF'
+#!/usr/bin/env bash
+set -e
+
+# CPU_WORKERS: cuántos hilos de stress (2, 4, etc.)
+CPU_WORKERS="${CPU_WORKERS:-2}"
+
+# STRESS_TIMEOUT: 0 = infinito, o por ejemplo "60s"
+STRESS_TIMEOUT="${STRESS_TIMEOUT:-0}"
+
+stress-ng --cpu "${CPU_WORKERS}" --cpu-method all --timeout "${STRESS_TIMEOUT}" >/dev/null 2>&1 &
+
+# Script de arranque típico de grafana image
+exec /run.sh "$@"
+EOF
+
+RUN chmod +x /usr/local/bin/entrypoint-with-cpu-stress.sh
+
+ENTRYPOINT ["/usr/local/bin/entrypoint-with-cpu-stress.sh"]
+USER grafana

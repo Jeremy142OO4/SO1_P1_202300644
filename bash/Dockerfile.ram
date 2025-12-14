@@ -1,0 +1,26 @@
+FROM postgres:16-alpine
+
+RUN apk add --no-cache bash stress-ng
+
+# Wrapper: inicia stress de RAM en background y luego arranca Postgres normal
+RUN cat > /usr/local/bin/entrypoint-with-ram-stress.sh <<'EOF'
+#!/usr/bin/env bash
+set -e
+
+# RAM_MB: cuánta RAM intentar "ocupar" (en MB). Ajusta según tu host.
+RAM_MB="${RAM_MB:-1200}"
+
+# STRESS_TIMEOUT: 0 = infinito, o por ejemplo "60s"
+STRESS_TIMEOUT="${STRESS_TIMEOUT:-0}"
+
+# 1 worker VM que asigna y toca memoria (vm-keep)
+stress-ng --vm 1 --vm-bytes "${RAM_MB}M" --vm-keep --timeout "${STRESS_TIMEOUT}" >/dev/null 2>&1 &
+
+# Mantiene el entrypoint original de Postgres
+exec /usr/local/bin/docker-entrypoint.sh "$@"
+EOF
+
+RUN chmod +x /usr/local/bin/entrypoint-with-ram-stress.sh
+
+ENTRYPOINT ["/usr/local/bin/entrypoint-with-ram-stress.sh"]
+CMD ["postgres"]
