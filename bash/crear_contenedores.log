@@ -482,3 +482,91 @@ f469d9d92a21d3e4590bd3fa4d6a103238c864a5e3808c06a6d7bd0986fe52d6
 bb18ce16f3950d32b6957dc4a970886f34d7f69a4147238c17b04b2fe6d78d23
 [10] Contenedor creado: contenedor_10_28432 usando img_cpu
 Proceso finalizado.
+Generando 10 contenedores aleatorios...
+6b665499e99909c1041227f62253b02dfb0162f0b0c521120306adef632a1901
+[1] Contenedor creado: contenedor_1_25778 usando img_ram
+f1d5fce44947684955567884c9cda0ba1ef3b3ede7ecf573ea3c0229d877298e
+[2] Contenedor creado: contenedor_2_8009 usando img_bajo
+53ca0c28c2e4de8a66508c5624dcd5b722ab8dd26511438122471b6d57a8fda8
+[3] Contenedor creado: contenedor_3_3437 usando img_cpu
+ea092bf75133f96ab00a87173416a0a522c18ede27e0230985b98cc983bb15b1
+[4] Contenedor creado: contenedor_4_19367 usando img_bajo
+0df38f0ed82ae219589a08f3375ef4c7e2498f8baa5c733fd11e574ae85acd76
+[5] Contenedor creado: contenedor_5_21154 usando img_cpu
+8ad687d0f53b4390b28cbbd1b0d8fcc3e60147cdfc70509b40a4bfe1a537f1e4
+[6] Contenedor creado: contenedor_6_6720 usando img_bajo
+3960b93f885704b3e894dbb6c7f03475915831ccafaaf240c9fa0ab6b8f6559c
+[7] Contenedor creado: contenedor_7_25628 usando img_cpu
+7b2ef918e08100f218a0f34a8e0737db47d250a5d8b328324f78fcc82a03ae7e
+[8] Contenedor creado: contenedor_8_25932 usando img_bajo
+f5bc9809eaa912ab0a1e827bc29d4125c64451e8f86c5584562a31fa37f2241a
+[9] Contenedor creado: contenedor_9_11468 usando img_bajo
+a5d461aa715670355a64170669a14058ebeb9fafef7fb5dd7b68d25954e5d9aa
+[10] Contenedor creado: contenedor_10_21106 usando img_ram
+Proceso finalizado.
+Generando 10 contenedores aleatorios...
+54c7c283ef02eb994ccd439d347b21bccfa94dab37fdea238d738415e671076e
+[1] Contenedor creado: contenedor_1_21098 usando img_cpu
+3e092fea86a7d81c27cfeb54369304013048bf5aa43f258e97df8372076314c2
+[2] Contenedor creado: contenedor_2_9661 usando img_ram
+e7698e3d65a715069845516ff96891bef48fc7a02a2b7f93a0c7019dedfe1062
+[3] Contenedor creado: contenedor_3_28349 usando img_ram
+08b26040c083177a57b46b280a08a6ab9393bfded69cc319c53569a19f4fda61
+[4] Contenedor creado: contenedor_4_22094 usando img_ram
+4c87a06a0f449111f9e6bbaa9be16e7202fd2c45f2f5b7c6c18a644c8b279e8f
+[5] Contenedor creado: contenedor_5_26510 usando img_cpu
+8081ca958b3436d8a29ba334e28435c19fbe220154b35363e914c5844d90bf5f
+[6] Contenedor creado: contenedor_6_175 usando img_bajo
+12aaa5ba4143e47135c6cc6618b4ce0c040649a21c216d5d66c4d8b25a389963
+[7] Contenedor creado: contenedor_7_27367 usando img_ram
+e3f8f8926ac9b8e9b9872faa0fa6032d351bf75e5f226ea09fab3c5153b1b03a
+[8] Contenedor creado: contenedor_8_10440 usando img_bajo
+0834164e6b94ca0edf718131ae3ef8521c1618b305ffb6cff0e7ffcd76b0bbcf
+[9] Contenedor creado: contenedor_9_29283 usando img_ram
+c10089788aeaddbac7fb90b5abad24de9c903356f855a2341f129ef1c825f16a
+[10] Contenedor creado: contenedor_10_1942 usando img_bajo
+Proceso finalizado.
+Generando 10 contenedores aleatorios...
+35758ee7d1c3093b2bf2e4491ee815c00ae920801978f84a18303f1dce2e5eb2
+[1] Contenedor creado: contenedor_1_8137 usando img_ram
+9953afec574a60c21af97a27751c6891bf75a03abc185f1deb451944275e9727
+[2] Contenedor creado: contenedor_2_32746 usando img_bajo
+33bfd0fb31ddc36fec1118c185b6a350fe6b92a473a9e7ac5851ec5c5f44b228
+[3] Contenedor creado: contenedor_3_14561 usando img_cpu
+f9fea0aa9469c24675b4f506b3b413ab7efdef6e3457b55ce0cd44ad9185f251
+[4] Contenedor creado: contenedor_4_18173 usando img_cpu
+4a51a54c1f8c1bc96dbb3c8380eb2ed89c3800ea90727d29a702660a5aa68f6c
+[5] Contenedor creado: contenedor_5_10664 usando img_cpu
+eb5808fbd4e5ee36b583216debe4743e345a09af52cf8624911ee4685d206d11
+[6] Contenedor creado: contenedor_6_31170 usando img_bajo
+e4c84e5a3d357f01787d7a78029eea92be3f6fb3e0326224f96408610d50150c
+[7] Contenedor creado: contenedor_7_4544 usando img_ram
+0b3a6f03d438d743f5d62712cb3eab180dd8c02f5fb26654d1c203523494feee
+[8] Contenedor creado: contenedor_8_28887 usando img_bajo
+f59cc3745af8c4702c3ab02f9d05e0ea74bb97ffc5a26c63fd1f227e9cb11a93
+[9] Contenedor creado: contenedor_9_17241 usando img_bajo
+7fd0610dd87dcf4d52328d9365b8baa99a0ba67397a4159408ab9f23d90ec8e4
+[10] Contenedor creado: contenedor_10_8256 usando img_bajo
+Proceso finalizado.
+Generando 10 contenedores aleatorios...
+001f772a57b1d9c77ba60b35ae528b63a99236408563ead1a746be58bde1f663
+[1] Contenedor creado: contenedor_1_6578 usando img_ram
+cf147ef59b68da4ce3ba468f94f842e52986a6d66be15604931007f51de4ca38
+[2] Contenedor creado: contenedor_2_21868 usando img_cpu
+0021664d6573ee3270d80b8342df49aa123eadf760ad3d45d1a6a5a1a476b225
+[3] Contenedor creado: contenedor_3_25375 usando img_bajo
+f9b6f87af1db8b2d88c8135a9261bf761f3f1fa78d57c5435eacb52a791a8ecf
+[4] Contenedor creado: contenedor_4_14319 usando img_ram
+dce67e27aae5af2823beac14ac30d18e40ec9196f071aaccec98d6faef2f2e1e
+[5] Contenedor creado: contenedor_5_13570 usando img_ram
+b603d56ad739c6d75e340028c098ded9bcde821593af8373165a944f225b7168
+[6] Contenedor creado: contenedor_6_28270 usando img_bajo
+01b75246aa1808ad124f8c4fdb29ad46c37c607e90d93b1899475d374f638f96
+[7] Contenedor creado: contenedor_7_31742 usando img_ram
+aae58bf3117ebacc73742952f5de911d3ffbe1708768817e35fc029a7c388b9f
+[8] Contenedor creado: contenedor_8_22633 usando img_ram
+225333368a022692d274ac7e4e1b2f25e847fd33f99e65811499b80db4b771d5
+[9] Contenedor creado: contenedor_9_16418 usando img_bajo
+34a33d8ba7a4617caee7a1b16ddf3abfd9725f60a214694b0e46fe9140d78227
+[10] Contenedor creado: contenedor_10_14616 usando img_bajo
+Proceso finalizado.

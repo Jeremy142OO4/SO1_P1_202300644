@@ -72,7 +72,7 @@ func EnforceContainerPolicy() error {
 }
 
 func removeStoppedProjectContainers() error {
-	// Traemos TODOS los contenedores detenidos (exited) y filtramos por imagen del proyecto
+	
 	out, err := run("docker", "ps", "-a", "--filter", "status=exited", "--format", "{{.ID}}|{{.Image}}|{{.Names}}")
 	if err != nil {
 		return err

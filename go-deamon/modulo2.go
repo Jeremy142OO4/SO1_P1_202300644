@@ -6,20 +6,20 @@ import (
 	"os"
 )
 
+const procContinfo = "/proc/continfo_so1_202300644"
 
 type ContInfo struct {
 	Count      int              `json:"Count"`
-	Containers []ContainerInfo  `json:"Containers"`
+	Containers []ContainerEntry `json:"Containers"`
 }
 
-type ContainerInfo struct {
+type ContainerEntry struct {
 	ContainerID string `json:"ContainerID"`
 	CgroupPath  string `json:"CgroupPath"`
 	RSSKB       uint64 `json:"RSS_KB"`
 	CPUJiffies  uint64 `json:"CPU_Jiffies"`
 	Procs       uint32 `json:"Procs"`
 }
-
 
 func ReadContainerInfo() (*ContInfo, error) {
 	raw, err := os.ReadFile(procContinfo)
@@ -35,20 +35,13 @@ func ReadContainerInfo() (*ContInfo, error) {
 	return &ci, nil
 }
 
-
 func PrintContainerInfo(ci *ContInfo) {
 	fmt.Println("=== CONTINFO ===")
 	fmt.Printf("Contenedores detectados: %d\n", ci.Count)
 
 	for i, c := range ci.Containers {
-		fmt.Printf(
-			"#%d ID=%s RSS=%dKB CPU_Jiffies=%d Procs=%d\n",
-			i+1,
-			shortID(c.ContainerID),
-			c.RSSKB,
-			c.CPUJiffies,
-			c.Procs,
-		)
+		fmt.Printf("#%d ID=%s RSS=%dKB CPU_Jiffies=%d Procs=%d\n",
+			i+1, shortID(c.ContainerID), c.RSSKB, c.CPUJiffies, c.Procs)
 	}
 	fmt.Println()
 }
