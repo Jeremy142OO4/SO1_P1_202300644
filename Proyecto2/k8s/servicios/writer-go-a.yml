@@ -17,13 +17,13 @@ spec:
     spec:
       containers:
         - name: writer-go-a
-          image: writer-go-a:latest
-          imagePullPolicy: IfNotPresent
+          image: zot:5000/proyecto2/writer-go-a:v1
+          imagePullPolicy: Always
           ports:
             - containerPort: 50051
           env:
             - name: KAFKA_BROKER
-              value: "kafka-service:29092"
+              value: "kafka-service.proyecto2.svc.cluster.local:29092"
             - name: KAFKA_TOPIC
               value: "ventas"
             - name: GRPC_PORT

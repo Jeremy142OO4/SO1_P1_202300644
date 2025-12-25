@@ -15,12 +15,12 @@ spec:
     spec:
       containers:
       - name: consumidor-go
-        image: consumidor-go:latest
-        imagePullPolicy: IfNotPresent
+        image: zot:5000/proyecto2/consumidor-go:v1
+        imagePullPolicy: Always
         env:
         - name: KAFKA_BROKER
-          value: "kafka-service:29092"
+          value: "kafka-service.proyecto2.svc.cluster.local:29092"
         - name: KAFKA_TOPIC
           value: "ventas"
         - name: VALKEY_ADDR
-          value: "valkey-0.valkey-headless:6379"
+          value: "valkey-primary.proyecto2.svc.cluster.local:6379"
