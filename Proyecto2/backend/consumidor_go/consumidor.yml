@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: consumidor-go
+  namespace: proyecto2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: consumidor-go
+  template:
+    metadata:
+      labels:
+        app: consumidor-go
+    spec:
+      containers:
+      - name: consumidor-go
+        image: consumidor-go:latest
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: KAFKA_BROKER
+          value: "kafka-service:29092"
+        - name: KAFKA_TOPIC
+          value: "ventas"
+        - name: VALKEY_ADDR
+          value: "valkey-0.valkey-headless:6379"
