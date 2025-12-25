@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: writer-go-a
+  namespace: proyecto2
+  labels:
+    app: writer-go-a
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: writer-go-a
+  template:
+    metadata:
+      labels:
+        app: writer-go-a
+    spec:
+      containers:
+        - name: writer-go-a
+          image: writer-go-a:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 50051
+          env:
+            - name: KAFKA_BROKER
+              value: "kafka-service:29092"
+            - name: KAFKA_TOPIC
+              value: "ventas"
+            - name: GRPC_PORT
+              value: "50051"
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "500m"
+              memory: "256Mi"
+          readinessProbe:
+            tcpSocket:
+              port: 50051
+            initialDelaySeconds: 3
+            periodSeconds: 5
+          livenessProbe:
+            tcpSocket:
+              port: 50051
+            initialDelaySeconds: 10
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: writer-go-a-svc
+  namespace: proyecto2
+  labels:
+    app: writer-go-a
+spec:
+  type: ClusterIP
+  selector:
+    app: writer-go-a
+  ports:
+    - name: grpc
+      port: 50051
+      targetPort: 50051

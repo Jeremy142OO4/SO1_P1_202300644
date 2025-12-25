@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"log"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/redis/go-redis/v9"
@@ -27,23 +28,18 @@ func getenv(key, def string) string {
 }
 
 func main() {
-	// Kafka
 	broker := getenv("KAFKA_BROKER", "kafka-service:29092")
 	topic := getenv("KAFKA_TOPIC", "ventas")
 	groupID := getenv("KAFKA_GROUP_ID", "grupo-consumidor-ventas")
 
-	// Valkey
-	valkeyAddr := getenv("VALKEY_ADDR", "valkey-service:6379")
+	valkeyAddr := getenv("VALKEY_ADDR", "valkey-primary:6379")
 
 	log.Printf("Kafka broker=%s topic=%s group=%s", broker, topic, groupID)
 	log.Printf("Valkey addr=%s", valkeyAddr)
 
 	ctx := context.Background()
 
-	rdb := redis.NewClient(&redis.Options{
-		Addr: valkeyAddr,
-	})
-
+	rdb := redis.NewClient(&redis.Options{Addr: valkeyAddr})
 	if err := rdb.Ping(ctx).Err(); err != nil {
 		log.Fatalf("No conecta a Valkey: %v", err)
 	}
@@ -74,18 +70,19 @@ func main() {
 			continue
 		}
 
-		// Normaliza categoría (por si viene Electronica/Ropa/Hogar/Belleza)
-		catKey := "categoria:" + v.Categoria + ":reportes"
+		cat := strings.ToUpper(strings.TrimSpace(v.Categoria))
+		catKey := "categoria:" + cat + ":reportes"
 
 		pipe := rdb.Pipeline()
 		pipe.Incr(ctx, "total_reportes")
 		pipe.Incr(ctx, catKey)
+		pipe.HIncrBy(ctx, "reportes_por_categoria", cat, 1)
 		_, err = pipe.Exec(ctx)
 		if err != nil {
 			log.Printf("Error escribiendo en Valkey: %v", err)
 			continue
 		}
 
-		log.Printf("OK venta categoria=%s producto=%s cantidad=%d precio=%.2f", v.Categoria, v.ProductoID, v.CantidadVendida, v.Precio)
+		log.Printf("OK venta categoria=%s producto=%s cantidad=%d precio=%.2f", cat, v.ProductoID, v.CantidadVendida, v.Precio)
 	}
 }

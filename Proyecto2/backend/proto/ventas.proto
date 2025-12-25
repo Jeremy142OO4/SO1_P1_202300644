@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package ventas;
+option go_package = "consumidor_go/pb;pb";
+
+service ProductSaleService {
+  rpc ProcesarVenta(ProductSaleRequest) returns (ProductSaleResponse);
+}
+
+enum Categoria {
+  CATEGORIA_UNSPECIFIED = 0;
+  ELECTRONICA = 1;
+  ROPA = 2;
+  HOGAR = 3;
+  BELLEZA = 4;
+}
+
+message ProductSaleRequest {
+  Categoria categoria = 1;
+  string producto_id = 2;
+  double precio = 3;
+  int32 cantidad_vendida = 4;
+}
+
+message ProductSaleResponse {
+  bool ok = 1;
+  string mensaje = 2;
+}
