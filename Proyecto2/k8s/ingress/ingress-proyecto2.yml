@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: proyecto2-ingress
+  namespace: proyecto2
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: proyecto2.local
+      http:
+        paths:
+          - path: /a
+            pathType: Prefix
+            backend:
+              service:
+                name: writer-go-a-svc
+                port:
+                  number: 50051
+          - path: /b
+            pathType: Prefix
+            backend:
+              service:
+                name: writer-go-b-svc
+                port:
+                  number: 50051

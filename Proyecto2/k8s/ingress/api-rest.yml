@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: api-rest-ingress
+  namespace: proyecto2
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: api.proyecto2.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: rust-api-svc
+                port:
+                  number: 8080

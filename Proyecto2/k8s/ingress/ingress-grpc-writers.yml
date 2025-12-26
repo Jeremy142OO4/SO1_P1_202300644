@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: writers-grpc-ingress
+  namespace: proyecto2
+  annotations:
+    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: proyecto2.local
+      http:
+        paths:
+          - path: /ventas.ProductSaleService
+            pathType: Prefix
+            backend:
+              service:
+                name: writer-go-a-svc
+                port:
+                  number: 50051

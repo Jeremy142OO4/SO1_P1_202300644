@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: go-deploy1
+  namespace: proyecto2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: go-deploy1
+  template:
+    metadata:
+      labels:
+        app: go-deploy1
+    spec:
+      containers:
+        - name: go-deploy1
+          image: zot:5000/proyecto2/go-deploy1:v1
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: HTTP_ADDR
+              value: ":8080"
+            - name: WRITER_A_ADDR
+              value: "writer-go-a-svc:50051"
+            - name: WRITER_B_ADDR
+              value: "writer-go-b-svc:50051"
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "200m"
+              memory: "256Mi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: go-deploy1-svc
+  namespace: proyecto2
+spec:
+  selector:
+    app: go-deploy1
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP

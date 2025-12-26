@@ -1,0 +1,17 @@
+adminUser: admin
+adminPassword: admin123
+
+service:
+  type: ClusterIP
+
+ingress:
+  enabled: true
+  ingressClassName: nginx
+  hosts:
+    - grafana.proyecto2.local
+  path: /
+  pathType: Prefix
+
+# Para poder leer Valkey/Redis desde Grafana
+env:
+  GF_INSTALL_PLUGINS: "redis-datasource"

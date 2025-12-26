@@ -1,0 +1,13 @@
+controller:
+  image:
+    registry: zot:5000
+    image: ingress-nginx/controller
+    tag: v1.14.1
+
+  admissionWebhooks:
+    patch:
+      enabled: true
+      image:
+        registry: zot:5000
+        image: ingress-nginx/kube-webhook-certgen
+        tag: v1.6.5
